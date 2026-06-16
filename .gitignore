@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+
+# PyCharm
+.idea/
+
+# Data and model files — too large for GitHub
+data/
+*.pth
+*.pt
+
+# Plots — regenerate from scripts
+*.png
+
+# Virtual environment
+venv/
