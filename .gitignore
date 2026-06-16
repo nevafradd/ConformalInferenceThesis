@@ -13,7 +13,7 @@ data/
 *.pt
 
 # Plots — regenerate from scripts
-*.png
+#*.png
 
 # Virtual environment
 venv/
