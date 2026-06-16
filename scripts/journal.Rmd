@@ -1,0 +1,24 @@
+mnist.mlp - trains multi layer perceptron on MNIST
+mnist.cnn - trains CNN on MNIST 
+mnist.CI - applies softmax conformal inference 
+extract_embeddings - extracts final layer 128-dim embeddings of digits
+embedding_ci_centroid - embedding-based ci using centroid distances
+visualise_embeddings - 2D visualisations of 128-dim embeddings using UMAP and t-SNE
+
+SOFTMAX BASED CI
+- empirical coverage 94.81
+- average set size 0.950 
+Issue: empty sets from high model confidence. 
+Applied RAPS - this has given lots of large prediction sets. 
+NEEDS REVISITING
+
+EMBEDDING-BASED CI
+Used distance to class centroid nonconformity score
+Still lots of empty sets - apparently known issue
+
+Next steps here
+- normalise distances
+- compare different distance metrics (cosine)
+- other nonconformity score methods; nearest neighbour, relative distance scores
+- compare three score methods
+
