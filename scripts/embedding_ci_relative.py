@@ -262,6 +262,31 @@ print(f"Min test score - mean: {min_test_scores.mean():.4f}")
 print(f"Min test score - median: {min_test_scores.median():.4f}")
 print(f"Fraction of min test scores below qhat: {(min_test_scores < qhat).float().mean():.4f}")
 
+# sanity check — these two should be IDENTICAL
+true_scores_method_1 = relative_score_for_true_class(test_embeddings, test_labels, centroids, DISTANCE_METRIC)
 
+test_scores_all = relative_scores_for_all_classes(test_embeddings, centroids, DISTANCE_METRIC)
+true_scores_method_2 = test_scores_all.gather(dim=1, index=test_labels.unsqueeze(1)).squeeze(1)
 
+diff = (true_scores_method_1 - true_scores_method_2).abs()
+print(f"Max difference between the two methods: {diff.max():.8f}")
+print(f"Number of mismatches > 1e-5: {(diff > 1e-5).sum().item()}")
 
+# compare summary stats of cal scores vs test "best class" scores directly
+print(f"Cal scores - mean: {cal_scores.mean():.4f}, std: {cal_scores.std():.4f}")
+test_true_scores = relative_score_for_true_class(test_embeddings, test_labels, centroids, DISTANCE_METRIC)
+print(f"Test true-class scores - mean: {test_true_scores.mean():.4f}, std: {test_true_scores.std():.4f}")
+print(f"Test - fraction above 1.0: {(test_true_scores > 1.0).float().mean():.4f}")
+print(f"Cal  - fraction above 1.0: {(cal_scores > 1.0).float().mean():.4f}")
+
+# compute per-class standard deviation of distance-to-own-centroid,
+# from the TRAINING set
+class_stds = torch.zeros(NUM_CLASSES)
+for c in range(NUM_CLASSES):
+    mask = (train_labels == c)
+    dists_to_own_centroid = torch.cdist(train_embeddings[mask], centroids[c:c+1], p=2).squeeze(1)
+    class_stds[c] = dists_to_own_centroid.std()
+
+print("Per-class spread (std of distance to own centroid):")
+for c in range(10):
+    print(f"  Digit {c}: {class_stds[c]:.4f}")
