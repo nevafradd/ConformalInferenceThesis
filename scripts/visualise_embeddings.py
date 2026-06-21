@@ -80,10 +80,10 @@ for digit in range(10):
 # Key parameters:
 #### n_neighbors — how many neighbours to consider when learning local structure
 #lower = more local detail, higher = more global structure
-# 15 is the standard default
+# 15 is default
 #### min_dist — how tightly to pack points in 2D
 #  lower = tighter clusters, higher = more spread out
-# 0.1 is the standard default
+# 0.1 is default
 #### metric — distance metric to use in the original space
 # euclidean, same as before
 
@@ -105,8 +105,8 @@ centroids_2d_umap = reducer.transform(centroids)  # (10, 2)
 # =============================================================================
 # 5. t-SNE PROJECTION
 # =============================================================================
-# t-distributed stochastic neighbour embedding - preserves local structure
-# distances between clusters not good
+# t-distributed stochastic neighbour embedding
+# preserves local structure, distances between clusters is not accurate
 # reliable structure within and immediately around clusters is reliable
 
 # perplexity — roughly the number of neighbours each point considers.
@@ -278,41 +278,4 @@ plt.savefig("centroid_distances.png", dpi=150, bbox_inches="tight")
 plt.close()
 print("Saved: centroid_distances.png")
 
-##================================================================
-# 9. WHAT TO LOOK FOR IN PLOTS
-###===============================================
 
-print("\n" + "=" * 60)
-print("WHAT TO LOOK FOR IN YOUR PLOTS")
-print("=" * 60)
-print("""
-umap_embeddings.png:
-  - Well separated clusters → CNN has learned distinct representations
-  - Overlapping clusters between specific pairs (e.g. 4 and 9) →
-    these are the digit pairs appearing together in prediction sets
-  - Points sitting between clusters → likely empty set examples
-  - Sub-clusters within one class → the class has multiple visual styles
-    that a single centroid represents poorly
-
-umap_with_centroids.png:
-  - Is the centroid (★) in the middle of each cluster?
-    If yes → centroid is a good representative
-    If no  → the class has multiple sub-clusters, explaining why some
-             examples are far from their centroid and get empty sets
-
-tsne_embeddings.png:
-  - Compare cluster shapes with UMAP — do the same pairs overlap?
-  - t-SNE shows finer local structure within clusters
-  - Ignore distances between clusters — not meaningful in t-SNE
-
-centroid_distances.png:
-  - Red pairs = most similar in embedding space = most likely to
-    appear together in prediction sets
-  - You should see 4↔9, 3↔8, 1↔7 as the closest pairs
-  - For your financial documents this table will be the most
-    interpretable output — showing which document types the model
-    finds most semantically similar
-""")
-
-print("All plots saved. Open them in PyCharm by clicking the files")
-print("in the project panel on the left.")
